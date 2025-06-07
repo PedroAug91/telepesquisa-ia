@@ -1,0 +1,31 @@
+services:
+  app:
+    container_name: tpia_node
+    build:
+      context: ./app/
+      dockerfile: Dockerfile
+    ports:
+      - ${APP_PORT-3000}:3000
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+    environment:
+      - CHROMADB_HOST=http://chromadb:${CHROMADB_PORT-8000}
+      - NODE_ENV=${NODE_ENV-dev}
+      - API_KEY=${API_KEY}
+      - DEBUG_MODE=${DEBUG_MODE-false}
+    depends_on:
+      - chromadb
+
+  chromadb:
+    container_name: tpia_chroma
+    image: chromadb/chroma
+    ports:
+      - ${CHROMADB_PORT-8000}:8000
+    volumes:
+      - ${CHROMADB_DATA_PATH-./chromadb_data}:/data
+    environment:
+      - IS_PERSISTENT=true
+      - PERSISTENT_DIRECTORY=/data
+      - ANONYMIZED_TELEMETRY=true
+
