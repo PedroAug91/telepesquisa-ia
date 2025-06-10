@@ -3,6 +3,7 @@ import fs from "fs";
 import { ChromaClient } from "chromadb";
 import { DefaultEmbeddingFunction } from "@chroma-core/default-embed";
 import { decodeHTML } from "entities";
+import path from "path";
 
 class DBConn {
     #client;
@@ -25,7 +26,6 @@ class DBConn {
 }
 
 const conn = new DBConn();
-await conn.setCollection();
 
 function formatText(text) {
     const noTagsText = text.replace(/<\/?[a-zA-Z][a-zA-Z0-9]*\b[^>]*>/g, "");
@@ -34,10 +34,11 @@ function formatText(text) {
 }
 
 function readCSVs(filename, status) {
-    const path = `./files/${filename}`;
+    const currDir = path.dirname(".");
+    const filePath = path.join(currDir,"src","files", filename);
 
     return new Promise((resolve, reject) => {
-        const file = fs.createReadStream(path);
+        const file = fs.createReadStream(filePath);
         const csvData = [];
 
         Papa.parse(file, { 
@@ -52,8 +53,8 @@ function readCSVs(filename, status) {
                 csvData.push(row.data);
             },
             complete: (_) => {
-                console.log(`Finished reading contents from ${filename}.`)
-                console.log(csvData[0]);
+                console.log(`[LOG] - Finished reading contents from ${filename}.`)
+                // console.log(csvData[0]);
                 resolve(csvData);
             },
             error: (err) => { 
@@ -73,7 +74,7 @@ async function insertIntoDB() {
 
     const dbData = [];
 
-    allCompanies.forEach(async (company, index) => {
+    allCompanies.forEach(async (company) => {
         const baseId = `${company.codigo}_principal`;
         const docs = `Nome: ${company.nome_empresa} Descrição: ${company.texto}`;
         const activities = company.atividades
@@ -112,8 +113,7 @@ async function insertIntoDB() {
     const documents = dbData.flatMap((d) => d.documents);
     const metadatas = dbData.flatMap((d) => d.metadatas);
 
-    console.log(ids);
-
+    console.log("[LOG] - Inserting CSV data into db.");
     await conn.collection.add({
         ids: ids,
         documents: documents,
@@ -126,8 +126,9 @@ async function getCompanies(text) {
         nResults: 2,
         queryTexts: [text],
         where: {"status": "ativo"},
-    })
+    });
 
     console.log(res.metadatas[0]);
 }
 
+export { insertIntoDB, getCompanies, conn }
