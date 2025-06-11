@@ -94,6 +94,7 @@ async function insertIntoDB() {
                 cidade: company.cidade,
                 bairro: company.bairro,
                 estado: company.estado,
+                status: company.status,
             }]
         });
 
@@ -123,12 +124,12 @@ async function insertIntoDB() {
 
 async function getCompanies(text) {
     const res = await conn.collection.query({
-        nResults: 2,
+        nResults: 5,
         queryTexts: [text],
         where: {"status": "ativo"},
     });
 
-    console.log(res.metadatas[0]);
+    return res.metadatas[0];
 }
 
 export { insertIntoDB, getCompanies, conn }

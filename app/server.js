@@ -16,7 +16,7 @@ conn.collection.count()
     });
 
 
-const PORT = process.env.APP_PORT
+const PORT = process.env.BACKEND_PORT
 app.listen(PORT, (_) => {
     console.log(`[LOG] - Listening at port ${PORT}`);
 });

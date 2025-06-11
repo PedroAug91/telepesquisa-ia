@@ -16,11 +16,16 @@
   },
   "dependencies": {
     "@chroma-core/default-embed": "^0.1.8",
+    "@langchain/core": "^0.3.57",
+    "@langchain/langgraph": "^0.3.1",
+    "@langchain/openai": "^0.5.12",
     "chromadb": "^3.0.3",
     "chromadb-default-embed": "^2.14.0",
+    "cors": "^2.8.5",
     "entities": "^6.0.1",
     "express": "^5.1.0",
     "luxon": "^3.6.1",
-    "papaparse": "^5.5.3"
+    "papaparse": "^5.5.3",
+    "zod": "^3.25.58"
   }
 }
