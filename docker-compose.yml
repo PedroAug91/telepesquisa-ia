@@ -1,11 +1,11 @@
 services:
-  app:
-    container_name: tpia_node
+  express:
+    container_name: tpia_express
     build:
       context: ./app/
       dockerfile: Dockerfile
     ports:
-      - ${APP_PORT-3000}:3000
+      - ${BACKEND_PORT-3000}:3000
     volumes:
       - ./app:/app
       - /app/node_modules
@@ -14,7 +14,7 @@ services:
       - NODE_ENV=${NODE_ENV-dev}
       - API_KEY=${API_KEY}
       - DEBUG_MODE=${DEBUG_MODE-false}
-      - APP_PORT=${APP_PORT-3000}
+      - BACKEND_PORT=${BACKEND_PORT-3000}
     depends_on:
       - chromadb
 
@@ -30,3 +30,21 @@ services:
       - PERSISTENT_DIRECTORY=/data
       - ANONYMIZED_TELEMETRY=true
 
+  react:
+    container_name: tpia_react
+    build:
+      context: ./react/
+      dockerfile: Dockerfile
+    ports:
+      - ${FRONTEND_PORT-3030}:3030
+    volumes:
+      - ./react:/app
+      - /react/node_modules
+    environment:
+      - NODE_ENV=${NODE_ENV-dev}
+      - API_KEY=${API_KEY}
+      - DEBUG_MODE=${DEBUG_MODE-false}
+      - FRONTEND_PORT=${FRONTEND_PORT-3030}
+      - BACKEND_PORT=${BACKEND_PORT-3000}
+    depends_on:
+      - express
