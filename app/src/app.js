@@ -59,11 +59,18 @@ app.post("/chat", async (req, res, next) => {
 
         const companies = await getCompanies(prompt);
 
+        console.log(companies);
+        const numCompanies = companies.length;
+        if (numCompanies < 5) {
+            const inactiveCompanies = await getCompanies(prompt, "inativo", numCompanies);
+            companies.push(inactiveCompanies);
+        }
+
         res.status(200).json({
             success: true,
             data: {
                 tipo_resposta: "lista_empresas",
-                mensagem: companies,
+                empresas: companies,
             },
         });
     } catch (err) {

@@ -5,6 +5,7 @@ import Input from "./components/Input";
 import Button from "./components/Button";
 import axios from "axios";
 
+
 const ChatPage = () => {
     const [input, setInput] = useState("");
     const [messages, setMessages] = useState([
@@ -18,20 +19,20 @@ const ChatPage = () => {
         setMessages((prev) => [...prev, userMessage]);
         setInput("");
 
-        const response = await axios.post(`http://localhost:3000/chat`,{
+        const PORT = 3000;
+
+        const response = await axios.post(`http://localhost:${PORT}/chat`,{
             userId: 1,
             prompt: input,
         });
 
         let message;
 
-        if (response.data.tipo_resposta === "mais_informacoes_necessarias") {
-            const companies = await axios.post(`http://localhost:3000/company/find`, {
-                prompt: input,
-            });
-            message = JSON.stringify(companies.data.data.empresas);
+        console.log(response.data.data)
+        if (response.data.data.tipo_resposta === "lista_empresas") {
+            message = JSON.stringify(response.data.data.empresas);
         } else {
-            message = JSON.stringify(response.data.data.mensagem);
+            message = response.data.data.mensagem;
         }
 
         const llmMessage = { sender: "llm", text: message };

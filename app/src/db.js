@@ -81,7 +81,6 @@ async function insertIntoDB() {
         .split(",")
         .map((a) => a.trim())
         .filter((a) => a.length > 0);
-        const contact = company.contatos;
 
         dbData.push({
             ids: [`${baseId}`],
@@ -90,7 +89,7 @@ async function insertIntoDB() {
                 tipo: "principal", 
                 id: baseId,
                 nome: company.nome_empresa,
-                telefones: contact,
+                telefones: company.telefones,
                 cidade: company.cidade,
                 bairro: company.bairro,
                 estado: company.estado,
@@ -122,11 +121,11 @@ async function insertIntoDB() {
     });
 }
 
-async function getCompanies(text) {
+async function getCompanies(text, status = "ativo", num = 0) {
     const res = await conn.collection.query({
-        nResults: 5,
+        nResults: 5 - num,
         queryTexts: [text],
-        where: {"status": "ativo"},
+        where: {"status": status},
     });
 
     return res.metadatas[0];
