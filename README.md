@@ -44,7 +44,19 @@ o repositório em sua máquina:
 _Obs_: A única variável que é __obrigatória__ é a API_KEY. Nela você vai colocar
 sua chave de API da [OpenAI].
 
-3. Após preencher suas variáveis de ambiente, resta só criar os containeres
+3. Instale as dependências dos containeres:
+
+``` bash
+    cd app && npm install
+    cd ..
+```
+
+``` bash
+    cd react && npm install
+    cd ..
+```
+
+4. Após preencher suas variáveis de ambiente, resta só criar os containeres
 docker:
 
 ``` bash
@@ -56,7 +68,7 @@ o volume de entidades sendo convertidas para embeddings e sendo inseridas nele.
 _Obs2_: A conversação com o chatbot só vai funcionar quando os dados forem inseridos
 no banco.
 
-4. Utilize os logs do docker para saber exatamente onde a página do chatbot
+5. Utilize os logs do docker para saber exatamente onde a página do chatbot
 está sendo hospedada:
 
 ``` bash
