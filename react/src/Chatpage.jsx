@@ -28,9 +28,17 @@ const ChatPage = () => {
 
         let message;
 
-        console.log(response.data.data)
         if (response.data.data.tipo_resposta === "lista_empresas") {
-            message = JSON.stringify(response.data.data.empresas);
+            const empresas = response.data.data.empresas;
+
+            message = empresas.map((empresa, index) => {
+                return (
+                    `🏢 *${empresa.nome}*\n` +
+                        `📍 ${empresa.bairro}, ${empresa.cidade} - ${empresa.estado}\n` +
+                        `📌 Tipo: ${empresa.tipo} | Status: ${empresa.status}\n` +
+                        `${index < empresas.length - 1 ? '\n' : ''}`
+                );
+            }).join('');
         } else {
             message = response.data.data.mensagem;
         }
